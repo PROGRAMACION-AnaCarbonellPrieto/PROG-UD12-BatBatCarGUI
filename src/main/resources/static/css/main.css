@@ -1,0 +1,108 @@
+html {
+    font-family: Arial, monospace
+}
+body .row {
+    padding: 10px;
+    font-size: 16px;
+}
+
+.center {
+    text-align: center;
+}
+
+.header {
+    background-color: lightgray;
+    text-transform: uppercase;
+    padding: 5px;
+    text-align: center;
+    overflow: hidden;
+}
+
+.header .icon {
+    width: 100px;
+    float: left;
+}
+
+.header .app-name {
+    float: right;
+    font-weight: bold;
+    margin-top: 60px;
+    margin-right: 20px;
+}
+
+.section {
+    background-color: antiquewhite;
+    text-align: center;
+    padding: 1px;
+    border-top: 1px solid white;
+    border-bottom: 1px solid darkgrey;
+}
+form {
+    border: 1px solid lightgray;
+    padding: 20px;
+    text-align: left;
+    display: inline-block;
+}
+
+form input, label {
+    margin: 4px;
+}
+
+table {
+    text-align: center;
+    padding: 10px;
+    border: 1px solid black;
+    width: 90%;
+    margin: 10px auto;
+}
+
+table a {
+    font-size: 12px;
+}
+table tr td {
+    padding: 5px;
+}
+
+table tr th {
+    border-bottom: 1px solid black;
+    margin-bottom: 2px;
+}
+
+table.viajes tr:nth-child(2n) {
+    background-color: lightgrey;
+}
+
+.abierto {
+    background-color: green;
+    padding: 2px;
+    border-right: 10px;
+}
+
+.cerrado {
+    background-color: red;
+    padding: 1px;
+    border-right: 10px;
+}
+
+.large {
+    width: 80%
+}
+
+.buscar-reservas input, .reset{
+    padding: 5px;
+}
+
+.form-errors {
+    background-color: lightpink;
+}
+
+.form-errors div{
+    display: inline-block;
+}
+
+.form-errors p {
+    text-align: left;
+    margin: 2px;
+    padding: 2px;
+    font-size: 12px;
+}

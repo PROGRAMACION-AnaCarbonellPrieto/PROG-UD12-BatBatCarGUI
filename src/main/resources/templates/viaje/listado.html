@@ -1,0 +1,41 @@
+<!-- Vista principal: Listado de viajes -->
+
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/html">
+<html xmlns:th="http://www.thymeleaf.org" lang="es">
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="/css/main.css">
+    <title>Title</title>
+</head>
+<body>
+<div class="header">
+    <img class="icon" src="/images/batbatcar.png">
+    <p class="app-name">Aplicación Bat Bat Car v2</p>
+</div>
+<div class="section">
+    <h3><strong>Listado de Viajes</strong></h3>
+</div>
+<table class="viajes">
+    <tr>
+        <th>Cod. Viaje</th>
+        <th>Ruta</th>
+        <th>Propietario</th>
+        <th>Fecha y hora de salida</th>
+        <th>Estado</th>
+        <th>Reservas</th>
+    </tr>
+    <tr th:each="viaje: ${viajes}">
+        <td th:text="${viaje.getCodViaje()}"></td>
+        <td th:text="${viaje.getRuta()}"></td>
+        <td th:text="${viaje.getPropietario()}"></td>
+        <td th:text="${#temporals.format(viaje.getFechaSalida(), 'dd-MM-yyyy ''a las'' HH:mm')}"></td>
+        <td th:classappend="${(viaje.estaDisponible()) ? 'abierto':'cerrado'}" th:text="${viaje.getEstado()}"></td>
+        <td>
+            <span th:if="${viaje.seHanRealizadoReservas}">Sí</span>
+			<span th:unless="${viaje.seHanRealizadoReservas}">No</span>
+        </td>
+    </tr>
+</table>
+</body>
+</html>

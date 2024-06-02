@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<dataset load_strategy="INSERT_LOAD_STRATEGY" reset_sequences="viajes">
+    <viajes codViaje="1" tipo="VIAJE" propietario="Roberto" ruta="Alicante-Ibi" fechaSalida="2022-08-03 19:59:45" duracion="30" precio="24" plazasOfertadas="8" estadoViaje="ABIERTO"/>
+    <viajes codViaje="2" tipo="FLEXIBLE" propietario="Alex" ruta="Alcoi-Cocentaina" fechaSalida="2022-05-03 12:00:00" duracion="5" precio="5" plazasOfertadas="10" estadoViaje="ABIERTO"/>
+    <viajes codViaje="3" tipo="CANCELABLE" propietario="Luis" ruta="Alcoi-Valencia" fechaSalida="2022-10-03 20:00:00" duracion="20" precio="40" plazasOfertadas="3" estadoViaje="CANCELADO"/>
+    <viajes codViaje="4" tipo="EXCLUSIVO" propietario="Juan" ruta="Alicante-Valencia" fechaSalida="2022-10-01 20:00:00" duracion="22" precio="11" plazasOfertadas="5" estadoViaje="CERRADO"/>
+    <viajes codViaje="5" tipo="CANCELABLE" propietario="Paco" ruta="Valencia-Alcoi" fechaSalida="2022-10-03 20:00:00" duracion="20" precio="40" plazasOfertadas="3" estadoViaje="ABIERTO"/>
+    <reservas viaje="1" codigoReserva="1-1" usuario="antonio" plazasSolicitadas="4" fechaRealizacion="2022-04-03 23:56:06"/>
+    <reservas viaje="1" codigoReserva="1-2" usuario="alex" plazasSolicitadas="3" fechaRealizacion="2022-01-12 12:12:22"/>
+    <reservas viaje="2" codigoReserva="2-1" usuario="roberto" plazasSolicitadas="5" fechaRealizacion="2022-04-03 23:56:06"/>
+    <reservas viaje="2" codigoReserva="2-2" usuario="roberto" plazasSolicitadas="5" fechaRealizacion="2022-04-03 23:56:06"/>
+</dataset>
