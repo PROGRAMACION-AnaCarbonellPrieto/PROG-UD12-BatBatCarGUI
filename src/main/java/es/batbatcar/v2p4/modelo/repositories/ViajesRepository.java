@@ -46,6 +46,20 @@ public class ViajesRepository {
         return viajes;
     }
     
+    public Set<Viaje> findAll(String city) {
+        
+    	// Se recuperan todos los viajes con destino @city del DAO de viajes
+    	Set<Viaje> viajes = viajeDAO.findAll(city);
+        
+    	// Se completa la información acerca de las reservas de cada viaje a través del DAO de reservas
+        for (Viaje viaje : viajes) {
+        	if (this.reservaDAO.findAllByTravel(viaje).size() > 0) {
+            	viaje.setSeHanRealizadoReservas(true);
+            }
+		}
+        return viajes;
+    }
+    
     /**
      * Obtiene el código del siguiente viaje
      * @return

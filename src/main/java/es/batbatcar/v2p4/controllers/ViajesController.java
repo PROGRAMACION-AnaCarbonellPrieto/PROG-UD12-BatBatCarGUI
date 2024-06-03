@@ -31,8 +31,12 @@ public class ViajesController {
      *
      * */
     @GetMapping("/viajes")
-    public String getViajesAction(Model model) {
-        model.addAttribute("viajes", viajesRepository.findAll());
+    public String getViajesAction(@RequestParam Map<String, String> params, Model model) {
+    	if (params.size() > 0) {
+    		model.addAttribute("viajes", viajesRepository.findAll(params.get("destino")));
+    	} else {
+    		model.addAttribute("viajes", viajesRepository.findAll());
+    	}
         return "viaje/listado";
     }
     

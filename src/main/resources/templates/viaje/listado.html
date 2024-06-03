@@ -30,6 +30,7 @@
         <th>Fecha y hora de salida</th>
         <th>Estado</th>
         <th>Reservas</th>
+		<th>Acciones</th>
     </tr>
     <tr th:each="viaje: ${viajes}">
         <td th:text="${viaje.getCodViaje()}"></td>
@@ -40,6 +41,11 @@
         <td>
             <span th:if="${viaje.seHanRealizadoReservas}">Sí</span>
 			<span th:unless="${viaje.seHanRealizadoReservas}">No</span>
+        </td>
+		<td>
+            <a href="#" th:if="${viaje.estaDisponible()}">Reservar /</a>
+			<a href="#">Ver detalle /</a>
+			<a href="#">Ver reservas</a>
         </td>
     </tr>
 </table>
