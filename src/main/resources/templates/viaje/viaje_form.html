@@ -1,1 +1,51 @@
 <!-- Vista del formulario de inserción de un viaje -->
+
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Añadir Viaje</title>
+    <link rel="stylesheet" href="/css/main.css">
+</head>
+<body>
+    <div class="header">
+        <img class="icon" src="/images/batbatcar.png">
+        <p class="app-name">Aplicación Bat Bat Car v2</p>
+    </div>
+    <div class="section">
+        <h3><strong>Añadir Viaje</strong></h3>
+    </div>
+    <div class="errors" th:if="${errors}">
+        <p th:each="error: ${errors}">
+            <strong th:text="|${error.key} -> |"></strong>
+            <span th:text="${error.value}"></span>
+        </p>
+    </div>
+    <form action="/viaje/add" method="post">
+        <label for="ruta">Ruta</label>
+        <input type="text" id="ruta" name="ruta">
+
+        <label for="plazasOfertadas">Plazas ofertadas</label>
+        <input type="number" id="plazasOfertadas" name="plazasOfertadas">
+
+        <label for="propietario">Propietario</label>
+        <input type="text" id="propietario" name="propietario">
+
+        <label for="precio">Precio (€)</label>
+        <input type="number" id="precio" name="precio" step="0.01">
+
+        <label for="duracion">Duración aproximada (min)</label>
+        <input type="number" id="duracion" name="duracion">
+
+        <label for="diaSalida">Día de salida</label>
+        <input type="date" id="diaSalida" name="diaSalida">
+
+        <label for="horaSalida">Hora de salida</label>
+        <input type="time" id="horaSalida" name="horaSalida">
+
+        <button type="submit">Añadir</button>
+        <a href="/"><button type="button">Cancelar (Volver al listado)</button></a>
+    </form>
+</body>
+</html>

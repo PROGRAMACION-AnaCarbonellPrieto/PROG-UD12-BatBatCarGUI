@@ -9,21 +9,13 @@ import java.util.Objects;
 public class Viaje implements Comparable<Viaje> {
 
     private int codViaje;
-
     private String propietario;
-
     private String ruta;
-
     private LocalDateTime fechaSalida;
-
     private long duracion;
-
     private float precio;
-
     protected int plazasOfertadas;
-
     protected EstadoViaje estadoViaje;
-
     protected boolean seHanRealizadoReservas;
 
     public Viaje(int codViaje) {

@@ -6,7 +6,7 @@
 <head>
     <meta charset="UTF-8">
     <link rel="stylesheet" href="/css/main.css">
-    <title>Title</title>
+    <title>Listado de Viajes</title>
 </head>
 <body>
 <div class="header">
@@ -16,6 +16,12 @@
 <div class="section">
     <h3><strong>Listado de Viajes</strong></h3>
 </div>
+<div class="info" th:if="${infoMessage}">
+        <p>
+            <span th:text="${infoMessage}"></span>
+        </p>
+    </div>
+<a href="viaje/add">Añadir nuevo Viaje</a>
 <table class="viajes">
     <tr>
         <th>Cod. Viaje</th>
