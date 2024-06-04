@@ -44,7 +44,7 @@
         </td>
 		<td>
             <a href="#" th:if="${viaje.estaDisponible()}">Reservar /</a>
-			<a href="#">Ver detalle /</a>
+			<a th:href="@{/viaje(codViaje=${viaje.getCodViaje()})}">Ver detalle /</a>
 			<a href="#">Ver reservas</a>
         </td>
     </tr>

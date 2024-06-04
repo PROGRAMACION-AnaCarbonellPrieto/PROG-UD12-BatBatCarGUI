@@ -60,6 +60,10 @@ public class ViajesRepository {
         return viajes;
     }
     
+    public Viaje findViajeById(int codViaje) {
+    	return viajeDAO.findById(codViaje);
+    }
+    
     /**
      * Obtiene el código del siguiente viaje
      * @return

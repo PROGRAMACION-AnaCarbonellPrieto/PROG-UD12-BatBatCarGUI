@@ -118,4 +118,11 @@ public class ViajesController {
     	
     	return "redirect:/viaje/add";
     }
+    
+    @GetMapping("/viaje")
+    public String getDetailAction(@RequestParam Map<String, String> params, Model model) {
+    	int codViaje = Integer.parseInt(params.get("codViaje"));
+    	model.addAttribute("viaje", viajesRepository.findViajeById(codViaje));
+    	return "viaje/viaje_detalle";
+    }
 }
