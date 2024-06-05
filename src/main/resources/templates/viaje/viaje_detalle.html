@@ -14,10 +14,7 @@
         <p class="app-name">Aplicación Bat Bat Car v2</p>
     </div>
     <div class="section">
-        <h3>
-			<strong>Detalle Viaje</strong>
-			<span th:text="| con código ${viaje.getCodViaje()}|"></span>
-		</h3>
+        <h3><strong th:text="|Detalle Viaje con código ${viaje.getCodViaje()}|"></strong></h3>
     </div>
     <form action="/viaje/add" method="post">
         <label for="ruta">Ruta</label>

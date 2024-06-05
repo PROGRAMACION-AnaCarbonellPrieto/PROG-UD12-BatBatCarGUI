@@ -1,7 +1,11 @@
 package es.batbatcar.v2p4.controllers;
 
+import es.batbatcar.v2p4.exceptions.ReservaAlreadyExistsException;
+import es.batbatcar.v2p4.exceptions.ReservaNoValidaException;
+import es.batbatcar.v2p4.exceptions.ReservaNotFoundException;
 import es.batbatcar.v2p4.exceptions.ViajeAlreadyExistsException;
 import es.batbatcar.v2p4.exceptions.ViajeNotFoundException;
+import es.batbatcar.v2p4.modelo.dto.Reserva;
 import es.batbatcar.v2p4.modelo.dto.viaje.Viaje;
 import es.batbatcar.v2p4.modelo.repositories.ViajesRepository;
 import es.batbatcar.v2p4.utils.Validator;
@@ -109,13 +113,11 @@ public class ViajesController {
 			redirectAttributes.addFlashAttribute("infoMessage", "Viaje insertado con éxito");
 			return "redirect:/viajes";
 		} catch (ViajeAlreadyExistsException e) {
-			errors.put("existe", "Viaje ya existe, no se ha podido insertar");
-			redirectAttributes.addFlashAttribute("errors", errors);
+			errors.put("existe", e.getMessage());
 		} catch (ViajeNotFoundException e) {
-			errors.put("notFound", "Viaje no encontrado, no se ha podido modificar");
-			redirectAttributes.addFlashAttribute("errors", errors);
+			errors.put("notFound", e.getMessage());
 		}
-    	
+    	redirectAttributes.addFlashAttribute("errors", errors);
     	return "redirect:/viaje/add";
     }
     
@@ -124,5 +126,71 @@ public class ViajesController {
     	int codViaje = Integer.parseInt(params.get("codViaje"));
     	model.addAttribute("viaje", viajesRepository.findViajeById(codViaje));
     	return "viaje/viaje_detalle";
+    }
+    
+    @GetMapping("/viaje/reserva/add")
+    public String getAddReservaAction(@RequestParam Map<String, String> params, Model model) {
+    	if (params.size() == 0) {
+    		return "redirect:/viajes";
+    	}
+    	
+    	model.addAttribute("codViaje", params.get("codViaje"));
+    	return "reserva/reserva_form";
+    }
+    
+    @PostMapping("/viaje/reserva/add")
+    public String postAddReservaAction(@RequestParam Map<String, String> params, RedirectAttributes redirectAttributes) {
+    	int codViaje = Integer.parseInt(params.get("codViaje"));
+    	Map<String, String> errors = new HashMap<>();
+    	
+    	for (Map.Entry<String, String> param: params.entrySet()) {
+    		if (param.getValue().isEmpty()) {
+    			errors.put("vacío", "Todos los campos tienen que estar rellenados");
+    			redirectAttributes.addFlashAttribute("errors", errors);
+    			redirectAttributes.addAttribute("codViaje", codViaje);
+    			return "redirect:/viaje/reserva/add";
+    		}
+    	}
+    	
+    	String usuario = params.get("usuario");
+    	int plazasSolicitadas = Integer.parseInt(params.get("plazasSolicitadas"));
+    	
+    	if (!Validator.isValidText(usuario, ' ')) {
+    		errors.put("usuario", "El propietario debe contener al menos dos cadenas separadas por espacio en blanco y comiencen por mayúsculas");
+    	}
+    	
+    	if (!Validator.isValidNumber(plazasSolicitadas)) {
+    		errors.put("plazas", "Las plazas solicitadas deben ser un valor entre 1 y 6");
+    	}
+    	
+    	if (errors.size() > 0) {
+    		redirectAttributes.addFlashAttribute("errors", errors);
+    		redirectAttributes.addAttribute("codViaje", codViaje);
+    		return "redirect:/viaje/reserva/add";
+    	}
+    	
+    	Viaje viaje;
+    	try {
+			viaje = viajesRepository.findViajeSiPermiteReserva(codViaje, usuario, plazasSolicitadas);
+		} catch (ReservaNoValidaException e) {
+			errors.put("noValid", e.getMessage());
+			redirectAttributes.addFlashAttribute("errors", errors);
+    		redirectAttributes.addAttribute("codViaje", codViaje);
+    		return "redirect:/viaje/reserva/add";
+		}
+    	
+    	Reserva nuevaReserva = new Reserva(viajesRepository.getNextCodReserva(viaje), usuario, plazasSolicitadas, viaje);
+    	try {
+			viajesRepository.save(nuevaReserva);
+			redirectAttributes.addFlashAttribute("infoMessage", "Reserva insertada con éxito");
+	    	return "redirect:/viajes";
+		} catch (ReservaAlreadyExistsException e) {
+			errors.put("noValid", e.getMessage());
+		} catch (ReservaNotFoundException e) {
+			errors.put("noValid", e.getMessage());
+		}
+    	redirectAttributes.addFlashAttribute("errors", errors);
+		redirectAttributes.addAttribute("codViaje", codViaje);
+		return "redirect:/viaje/reserva/add";
     }
 }

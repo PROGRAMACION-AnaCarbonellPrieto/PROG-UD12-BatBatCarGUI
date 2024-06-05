@@ -1,6 +1,7 @@
 package es.batbatcar.v2p4.modelo.repositories;
 
 import es.batbatcar.v2p4.exceptions.ReservaAlreadyExistsException;
+import es.batbatcar.v2p4.exceptions.ReservaNoValidaException;
 import es.batbatcar.v2p4.exceptions.ReservaNotFoundException;
 import es.batbatcar.v2p4.exceptions.ViajeAlreadyExistsException;
 import es.batbatcar.v2p4.exceptions.ViajeNotFoundException;
@@ -64,6 +65,34 @@ public class ViajesRepository {
     	return viajeDAO.findById(codViaje);
     }
     
+    public Viaje findViajeSiPermiteReserva(int codViaje, String usuario, int plazasSolicitadas) throws ReservaNoValidaException {
+    	Viaje viaje = viajeDAO.findById(codViaje);
+    	List<Reserva> reservas = reservaDAO.findAllByTravel(viaje);
+    	int plazasReservadas = 0;
+    	
+    	if (viaje.getPropietario().equals(usuario)) {
+    		throw new ReservaNoValidaException("Eres el propietario del viaje");
+    	}
+    	
+    	if (viaje.isCerrado() || viaje.isCancelado()) {
+    		throw new ReservaNoValidaException("El viaje está cerrado o cancelado");
+    	}
+    	
+    	for(Reserva reserva: reservas) {
+    		if (reserva.getUsuario().equals(usuario)) {
+    			throw new ReservaNoValidaException("Ya has realizado una reserva");
+    		}
+    		
+    		plazasReservadas += reserva.getPlazasSolicitadas();
+    	}
+    	
+    	if (plazasSolicitadas > viaje.getPlazasOfertadas() - plazasReservadas) {
+    		throw new ReservaNoValidaException("No quedan suficientes plazas");
+    	}
+    	
+    	return viaje;
+    }
+    
     /**
      * Obtiene el código del siguiente viaje
      * @return
@@ -118,5 +147,12 @@ public class ViajesRepository {
      */
 	public void remove(Reserva reserva) throws ReservaNotFoundException {
 		reservaDAO.remove(reserva);
+	}
+
+	public String getNextCodReserva(Viaje viaje) {
+		List<Reserva> reservas = reservaDAO.findAllByTravel(viaje);
+		String codigoReserva = reservas.get(reservas.size() - 1).getCodigoReserva();
+		int numReserva = Integer.parseInt(codigoReserva.split("-")[1]) + 1;
+		return viaje.getCodViaje() + "-" + numReserva;
 	}
 }

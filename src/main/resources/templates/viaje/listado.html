@@ -43,7 +43,7 @@
 			<span th:unless="${viaje.seHanRealizadoReservas}">No</span>
         </td>
 		<td>
-            <a href="#" th:if="${viaje.estaDisponible()}">Reservar /</a>
+            <a th:href="@{/viaje/reserva/add(codViaje=${viaje.getCodViaje()})}" th:if="${viaje.estaDisponible()}">Reservar /</a>
 			<a th:href="@{/viaje(codViaje=${viaje.getCodViaje()})}">Ver detalle /</a>
 			<a href="#">Ver reservas</a>
         </td>
