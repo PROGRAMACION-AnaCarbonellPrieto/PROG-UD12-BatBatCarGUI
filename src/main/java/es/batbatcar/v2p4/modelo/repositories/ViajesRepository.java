@@ -151,6 +151,10 @@ public class ViajesRepository {
 
 	public String getNextCodReserva(Viaje viaje) {
 		List<Reserva> reservas = reservaDAO.findAllByTravel(viaje);
+		if (reservas.isEmpty()) {
+			return viaje.getCodViaje() + "-1";
+		}
+		
 		String codigoReserva = reservas.get(reservas.size() - 1).getCodigoReserva();
 		int numReserva = Integer.parseInt(codigoReserva.split("-")[1]) + 1;
 		return viaje.getCodViaje() + "-" + numReserva;

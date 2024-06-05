@@ -70,7 +70,7 @@ table tr th {
     margin-bottom: 2px;
 }
 
-table.viajes tr:nth-child(2n) {
+table.viajes tr:nth-child(2n), table.reservas tr:nth-child(2n) {
     background-color: lightgrey;
 }
 

@@ -36,7 +36,7 @@ public class ViajesController {
      * */
     @GetMapping("/viajes")
     public String getViajesAction(@RequestParam Map<String, String> params, Model model) {
-    	if (params.size() > 0) {
+    	if (params.containsKey("destino")) {
     		model.addAttribute("viajes", viajesRepository.findAll(params.get("destino")));
     	} else {
     		model.addAttribute("viajes", viajesRepository.findAll());
@@ -123,6 +123,10 @@ public class ViajesController {
     
     @GetMapping("/viaje")
     public String getDetailAction(@RequestParam Map<String, String> params, Model model) {
+    	if (!params.containsKey("codViaje") || params.get("codViaje").isEmpty()) {
+    		return "redirect:/viajes";
+    	}
+    	
     	int codViaje = Integer.parseInt(params.get("codViaje"));
     	model.addAttribute("viaje", viajesRepository.findViajeById(codViaje));
     	return "viaje/viaje_detalle";
@@ -130,7 +134,7 @@ public class ViajesController {
     
     @GetMapping("/viaje/reserva/add")
     public String getAddReservaAction(@RequestParam Map<String, String> params, Model model) {
-    	if (params.size() == 0) {
+    	if (!params.containsKey("codViaje") || params.get("codViaje").isEmpty()) {
     		return "redirect:/viajes";
     	}
     	
@@ -192,5 +196,19 @@ public class ViajesController {
     	redirectAttributes.addFlashAttribute("errors", errors);
 		redirectAttributes.addAttribute("codViaje", codViaje);
 		return "redirect:/viaje/reserva/add";
+    }
+    
+    @GetMapping("/viaje/reservas")
+    public String getReservasAction(@RequestParam Map<String, String> params, Model model) {
+    	if (!params.containsKey("codViaje") || params.get("codViaje").isEmpty()) {
+    		return "redirect:/viajes";
+    	}
+    	
+    	int codViaje = Integer.parseInt(params.get("codViaje"));
+    	model.addAttribute("codViaje", codViaje);
+    	
+    	Viaje viaje = viajesRepository.findViajeById(codViaje);
+    	model.addAttribute("reservas", viajesRepository.findReservasByViaje(viaje));
+    	return "reserva/listado";
     }
 }

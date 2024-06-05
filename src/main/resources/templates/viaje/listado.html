@@ -17,11 +17,11 @@
     <h3><strong>Listado de Viajes</strong></h3>
 </div>
 <div class="info" th:if="${infoMessage}">
-        <p>
-            <span th:text="${infoMessage}"></span>
-        </p>
-    </div>
-<a href="viaje/add">Añadir nuevo Viaje</a>
+    <p>
+        <span th:text="${infoMessage}"></span>
+    </p>
+</div>
+<a href="/viaje/add"><button>Añadir nuevo Viaje</button></a>
 <table class="viajes">
     <tr>
         <th>Cod. Viaje</th>
@@ -45,7 +45,7 @@
 		<td>
             <a th:href="@{/viaje/reserva/add(codViaje=${viaje.getCodViaje()})}" th:if="${viaje.estaDisponible()}">Reservar /</a>
 			<a th:href="@{/viaje(codViaje=${viaje.getCodViaje()})}">Ver detalle /</a>
-			<a href="#">Ver reservas</a>
+			<a th:href="@{/viaje/reservas(codViaje=${viaje.getCodViaje()})}">Ver reservas</a>
         </td>
     </tr>
 </table>
