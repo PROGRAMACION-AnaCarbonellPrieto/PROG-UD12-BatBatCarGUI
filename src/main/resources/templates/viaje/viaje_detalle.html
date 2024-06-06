@@ -37,8 +37,30 @@
 
         <label for="horaSalida">Hora de salida</label>
         <input type="time" id="horaSalida" name="horaSalida" th:value="${#temporals.format(viaje.getFechaSalida(), 'HH:mm')}" readonly>
+		
+		<table class="reservas">
+		    <tr>
+		        <th>Cod. Reserva</th>
+		        <th>Usuario</th>
+		        <th>Plazas Solicitadas</th>
+		        <th>Fecha y Hora de realización</th>
+				<th>Acciones</th>
+		    </tr>
+		    <tr th:each="reserva: ${reservas}">
+		        <td th:text="${reserva.getCodigoReserva()}"></td>
+		        <td th:text="${reserva.getUsuario()}"></td>
+		        <td th:text="${reserva.getPlazasSolicitadas()}"></td>
+		        <td th:text="${#temporals.format(reserva.getFechaRealizacion(), 'dd-MM-yyyy ''a las'' HH:mm')}"></td>
+		    	<td>
+					<a href="#">Ver Detalle /</a>
+					<a href="#">Cancelar</a>
+				</td>
+			</tr>
+		</table>
 
-        <a href="/viajes">Volver al listado</a>
+		<a href="#"><button type="button">Cancelar Viaje</button></a>
+		<a th:href="@{/viaje/reserva/add(codViaje=${viaje.getCodViaje()})}" th:if="${viaje.estaDisponible()}"><button type="button">Añadir Reserva</button></a>
+        <a href="/viajes"><button type="button">Volver al listado</button></a>
     </form>
 </body>
 </html>

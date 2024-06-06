@@ -128,7 +128,9 @@ public class ViajesController {
     	}
     	
     	int codViaje = Integer.parseInt(params.get("codViaje"));
-    	model.addAttribute("viaje", viajesRepository.findViajeById(codViaje));
+    	Viaje viaje = viajesRepository.findViajeById(codViaje);
+    	model.addAttribute("viaje", viaje);
+    	model.addAttribute("reservas", viajesRepository.findReservasByViaje(viaje));
     	return "viaje/viaje_detalle";
     }
     
