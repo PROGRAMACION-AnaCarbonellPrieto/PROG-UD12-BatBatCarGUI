@@ -13,8 +13,10 @@ import es.batbatcar.v2p4.utils.Validator;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -36,11 +38,31 @@ public class ViajesController {
      * */
     @GetMapping("/viajes")
     public String getViajesAction(@RequestParam Map<String, String> params, Model model) {
+    	Set<Viaje> viajes;
     	if (params.containsKey("destino")) {
-    		model.addAttribute("viajes", viajesRepository.findAll(params.get("destino")));
+    		viajes = viajesRepository.findAll(params.get("destino"));
     	} else {
-    		model.addAttribute("viajes", viajesRepository.findAll());
+    		viajes = viajesRepository.findAll();
     	}
+    	
+    	Map<Integer, Integer> numReservas = new HashMap<>();
+    	Map<Integer, Integer> plazasDisponibles = new HashMap<>();
+    	for (Viaje viaje: viajes) {
+    		int reservas = 0;
+        	int plazas = 0;
+        	
+    		for (Reserva reserva: viajesRepository.findReservasByViaje(viaje)) {
+    			reservas++;
+    			plazas += reserva.getPlazasSolicitadas();
+    		}
+    		
+    		numReservas.put(viaje.getCodViaje(), reservas);
+    		plazasDisponibles.put(viaje.getCodViaje(), viaje.getPlazasOfertadas() - plazas);
+    	}
+    	
+    	model.addAttribute("viajes", viajes);
+    	model.addAttribute("numReservas", numReservas);
+    	model.addAttribute("plazasDisponibles", plazasDisponibles);
         return "viaje/listado";
     }
     
