@@ -4,6 +4,7 @@ import es.batbatcar.v2p4.exceptions.ReservaAlreadyExistsException;
 import es.batbatcar.v2p4.exceptions.ReservaNoValidaException;
 import es.batbatcar.v2p4.exceptions.ReservaNotFoundException;
 import es.batbatcar.v2p4.exceptions.ViajeAlreadyExistsException;
+import es.batbatcar.v2p4.exceptions.ViajeNotCancelableException;
 import es.batbatcar.v2p4.exceptions.ViajeNotFoundException;
 import es.batbatcar.v2p4.modelo.dto.Reserva;
 import es.batbatcar.v2p4.modelo.dto.viaje.Viaje;
@@ -267,5 +268,29 @@ public class ViajesController {
 		model.addAttribute("plazasDisponibles", viajesRepository.getNumPlazasDisponiblesEnViaje(viaje));
 		
     	return "reserva/reserva_detalle";
+    }
+    
+    @GetMapping("/viaje/reserva/cancel")
+    public String getCancelReservaAction(@RequestParam Map<String, String> params, RedirectAttributes redirectAttributes) {
+    	String codReserva = params.get("codReserva");
+    	try {
+			viajesRepository.remove(viajesRepository.findReservaById(codReserva));
+			redirectAttributes.addFlashAttribute("infoMessage", "Reserva cancelada con éxito");
+		} catch (ReservaNotFoundException e) {
+			redirectAttributes.addFlashAttribute("infoMessage", e.getMessage());
+		}
+    	return "redirect:/viajes";
+    }
+    
+    @GetMapping("/viaje/cancel")
+    public String getCancelViajeAction(@RequestParam Map<String, String> params, RedirectAttributes redirectAttributes) {
+    	try {
+    		int codViaje = Integer.parseInt(params.get("codViaje"));
+			viajesRepository.cancel(codViaje);
+			redirectAttributes.addFlashAttribute("infoMessage", "Viaje cancelado con éxito");
+		} catch (NumberFormatException | ViajeNotCancelableException | ViajeNotFoundException e) {
+			redirectAttributes.addFlashAttribute("infoMessage", e.getMessage());
+		}
+    	return "redirect:/viajes";
     }
 }

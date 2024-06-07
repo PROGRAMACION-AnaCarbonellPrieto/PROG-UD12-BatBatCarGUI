@@ -4,6 +4,7 @@ import es.batbatcar.v2p4.exceptions.ReservaAlreadyExistsException;
 import es.batbatcar.v2p4.exceptions.ReservaNoValidaException;
 import es.batbatcar.v2p4.exceptions.ReservaNotFoundException;
 import es.batbatcar.v2p4.exceptions.ViajeAlreadyExistsException;
+import es.batbatcar.v2p4.exceptions.ViajeNotCancelableException;
 import es.batbatcar.v2p4.exceptions.ViajeNotFoundException;
 import es.batbatcar.v2p4.modelo.dao.inmemorydao.InMemoryReservaDAO;
 import es.batbatcar.v2p4.modelo.dao.inmemorydao.InMemoryViajeDAO;
@@ -124,6 +125,13 @@ public class ViajesRepository {
     	} else {
     		viajeDAO.update(viaje);
     	}
+    }
+    
+    public void cancel(int codViaje) throws ViajeNotCancelableException, ViajeNotFoundException {
+    	Viaje viaje = viajeDAO.getById(codViaje);
+    	viaje.cancelar();
+    	
+    	viajeDAO.update(viaje);
     }
     
 

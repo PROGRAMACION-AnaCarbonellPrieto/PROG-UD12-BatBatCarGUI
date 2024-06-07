@@ -49,7 +49,7 @@
             <a th:href="@{/viaje/reserva/add(codViaje=${viaje.getCodViaje()})}" th:if="${viaje.estaDisponible()}">Reservar /</a>
 			<a th:href="@{/viaje(codViaje=${viaje.getCodViaje()})}">Ver detalle /</a>
 			<a th:href="@{/viaje/reservas(codViaje=${viaje.getCodViaje()})}">Ver reservas</a>
-			<a href="#" th:if="${viaje.estaDisponible()}">/ Cancelar</a>
+			<a th:href="@{/viaje/cancel(codViaje=${viaje.getCodViaje()})}" th:if="${viaje.estaDisponible()}">/ Cancelar</a>
         </td>
     </tr>
 </table>

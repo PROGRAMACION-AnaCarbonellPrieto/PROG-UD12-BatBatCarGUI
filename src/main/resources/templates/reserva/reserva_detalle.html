@@ -22,8 +22,6 @@
 
         <label for="plazasSolicitadas">Plazas solicitadas</label>
         <input type="number" id="plazasSolicitadas" name="plazasSolicitadas" th:value="${reserva.getPlazasSolicitadas()}" readonly>
-
-        <a th:href="@{/viaje/reservas(codViaje=${reserva.getCodigoViaje()})}"><button type="button">Volver al listado de reservas</button></a>
 		
 		<table class="viajes">
 		    <tr>
@@ -45,6 +43,8 @@
 				<td th:text="${plazasDisponibles}"></td>
 		    </tr>
 		</table>
+		
+		<a th:href="@{/viaje/reservas(codViaje=${reserva.getCodigoViaje()})}"><button type="button">Volver al listado de reservas</button></a>
     </form>
 </body>
 </html>

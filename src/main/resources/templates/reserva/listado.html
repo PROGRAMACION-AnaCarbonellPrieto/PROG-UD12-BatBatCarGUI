@@ -31,7 +31,7 @@
         <td th:text="${#temporals.format(reserva.getFechaRealizacion(), 'dd-MM-yyyy ''a las'' HH:mm')}"></td>
 		<td>
 			<a th:href="@{/viaje/reserva(codReserva=${reserva.getCodigoReserva()})}">Ver Detalle /</a>
-			<a href="#">Cancelar</a>
+			<a th:href="@{/viaje/reserva/cancel(codReserva=${reserva.getCodigoReserva()})}">Cancelar</a>
 		</td>
     </tr>
 </table>
