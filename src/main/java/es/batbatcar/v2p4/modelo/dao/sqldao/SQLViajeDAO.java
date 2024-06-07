@@ -116,7 +116,7 @@ public class SQLViajeDAO implements ViajeDAO {
     public Viaje findById(int codViaje) {
     	Connection connection = mariaDBConnection.getConnection();
     	
-    	String sql = "SELECT * FROM " + TABLE_NAME + "WHERE codViaje=" + codViaje;
+    	String sql = "SELECT * FROM " + TABLE_NAME + " WHERE codViaje=" + codViaje;
     	
     	try (
     			Statement statement = connection.createStatement();

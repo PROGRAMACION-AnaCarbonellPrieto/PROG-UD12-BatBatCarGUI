@@ -108,13 +108,7 @@ public class ViajesRepository {
     }
     
     public int getNumPlazasDisponiblesEnViaje(Viaje viaje) {
-    	int plazasReservadas = 0;
-    	
-    	for (Reserva reserva: reservaDAO.findAllByTravel(viaje)) {
-    		plazasReservadas += reserva.getPlazasSolicitadas();
-    	}
-    	
-    	return viaje.getPlazasOfertadas() - plazasReservadas;
+    	return viaje.getPlazasOfertadas() - reservaDAO.getNumPlazasReservadasEnViaje(viaje);
     }
     
     /**
