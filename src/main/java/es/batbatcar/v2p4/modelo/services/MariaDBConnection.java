@@ -1,8 +1,5 @@
 package es.batbatcar.v2p4.modelo.services;
 
-import es.batbatcar.v2p4.exceptions.DatabaseConnectionException;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Service;
 
 import java.sql.Connection;

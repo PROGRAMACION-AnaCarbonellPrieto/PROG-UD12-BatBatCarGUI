@@ -58,7 +58,7 @@ public class SQLReservaDAO implements ReservaDAO {
     			Statement statement = connection.createStatement();
     			ResultSet rs = statement.executeQuery(sql);
     		) {
-    	    while(rs.next()) {
+    	    if(rs.next()) {
         	    return mapToReserva(rs);
     		}
     	} catch (SQLException e) {

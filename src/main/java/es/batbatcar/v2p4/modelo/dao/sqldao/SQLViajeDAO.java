@@ -122,7 +122,7 @@ public class SQLViajeDAO implements ViajeDAO {
     			Statement statement = connection.createStatement();
     			ResultSet rs = statement.executeQuery(sql);
     		) {
-    	    while(rs.next()) {
+    	    if(rs.next()) {
         	    return mapToViaje(rs);
     		}
     	} catch (SQLException e) {

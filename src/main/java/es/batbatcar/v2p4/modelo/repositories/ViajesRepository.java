@@ -6,8 +6,6 @@ import es.batbatcar.v2p4.exceptions.ReservaNotFoundException;
 import es.batbatcar.v2p4.exceptions.ViajeAlreadyExistsException;
 import es.batbatcar.v2p4.exceptions.ViajeNotCancelableException;
 import es.batbatcar.v2p4.exceptions.ViajeNotFoundException;
-import es.batbatcar.v2p4.modelo.dao.inmemorydao.InMemoryReservaDAO;
-import es.batbatcar.v2p4.modelo.dao.inmemorydao.InMemoryViajeDAO;
 import es.batbatcar.v2p4.modelo.dto.Reserva;
 import es.batbatcar.v2p4.modelo.dto.viaje.Viaje;
 import es.batbatcar.v2p4.modelo.dao.interfaces.ReservaDAO;
@@ -71,7 +69,6 @@ public class ViajesRepository {
     public Viaje findViajeSiPermiteReserva(int codViaje, String usuario, int plazasSolicitadas) throws ReservaNoValidaException, ViajeNotFoundException {
     	Viaje viaje = viajeDAO.getById(codViaje);
     	List<Reserva> reservas = reservaDAO.findAllByTravel(viaje);
-    	int plazasReservadas = 0;
     	
     	if (viaje.getPropietario().equals(usuario)) {
     		throw new ReservaNoValidaException("Eres el propietario del viaje");
@@ -85,11 +82,9 @@ public class ViajesRepository {
     		if (reserva.getUsuario().equals(usuario)) {
     			throw new ReservaNoValidaException("Ya has realizado una reserva");
     		}
-    		
-    		plazasReservadas += reserva.getPlazasSolicitadas();
     	}
     	
-    	if (plazasSolicitadas > viaje.getPlazasOfertadas() - plazasReservadas) {
+    	if (plazasSolicitadas > getNumPlazasDisponiblesEnViaje(viaje)) {
     		throw new ReservaNoValidaException("No quedan suficientes plazas");
     	}
     	
