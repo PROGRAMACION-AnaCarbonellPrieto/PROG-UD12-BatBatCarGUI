@@ -48,16 +48,8 @@ public class ViajesController {
     	Map<Integer, Integer> numReservas = new HashMap<>();
     	Map<Integer, Integer> plazasDisponibles = new HashMap<>();
     	for (Viaje viaje: viajes) {
-    		int reservas = 0;
-        	int plazas = 0;
-        	
-    		for (Reserva reserva: viajesRepository.findReservasByViaje(viaje)) {
-    			reservas++;
-    			plazas += reserva.getPlazasSolicitadas();
-    		}
-    		
-    		numReservas.put(viaje.getCodViaje(), reservas);
-    		plazasDisponibles.put(viaje.getCodViaje(), viaje.getPlazasOfertadas() - plazas);
+    		numReservas.put(viaje.getCodViaje(), viajesRepository.getNumReservasEnViaje(viaje));
+    		plazasDisponibles.put(viaje.getCodViaje(), viajesRepository.getNumPlazasDisponiblesEnViaje(viaje));
     	}
     	
     	model.addAttribute("viajes", viajes);
@@ -134,23 +126,23 @@ public class ViajesController {
 			viajesRepository.save(nuevoViaje);
 			redirectAttributes.addFlashAttribute("infoMessage", "Viaje insertado con éxito");
 			return "redirect:/viajes";
-		} catch (ViajeAlreadyExistsException e) {
-			errors.put("existe", e.getMessage());
-		} catch (ViajeNotFoundException e) {
-			errors.put("notFound", e.getMessage());
+		} catch (ViajeNotFoundException | ViajeAlreadyExistsException e) {
+			errors.put("error", e.getMessage());
 		}
     	redirectAttributes.addFlashAttribute("errors", errors);
     	return "redirect:/viaje/add";
     }
     
     @GetMapping("/viaje")
-    public String getDetailAction(@RequestParam Map<String, String> params, Model model) {
-    	if (!params.containsKey("codViaje") || params.get("codViaje").isEmpty()) {
-    		return "redirect:/viajes";
-    	}
-    	
-    	int codViaje = Integer.parseInt(params.get("codViaje"));
-    	Viaje viaje = viajesRepository.findViajeById(codViaje);
+    public String getDetailViajeAction(@RequestParam Map<String, String> params, Model model) {
+    	Viaje viaje;
+		try {
+			int codViaje = Integer.parseInt(params.get("codViaje"));
+			viaje = viajesRepository.findViajeById(codViaje);
+		} catch (NumberFormatException | ViajeNotFoundException e) {
+			return "redirect:/viajes";
+		}
+		
     	model.addAttribute("viaje", viaje);
     	model.addAttribute("reservas", viajesRepository.findReservasByViaje(viaje));
     	return "viaje/viaje_detalle";
@@ -200,8 +192,8 @@ public class ViajesController {
     	Viaje viaje;
     	try {
 			viaje = viajesRepository.findViajeSiPermiteReserva(codViaje, usuario, plazasSolicitadas);
-		} catch (ReservaNoValidaException e) {
-			errors.put("noValid", e.getMessage());
+		} catch (ReservaNoValidaException | ViajeNotFoundException e) {
+			errors.put("error", e.getMessage());
 			redirectAttributes.addFlashAttribute("errors", errors);
     		redirectAttributes.addAttribute("codViaje", codViaje);
     		return "redirect:/viaje/reserva/add";
@@ -231,8 +223,37 @@ public class ViajesController {
     	int codViaje = Integer.parseInt(params.get("codViaje"));
     	model.addAttribute("codViaje", codViaje);
     	
-    	Viaje viaje = viajesRepository.findViajeById(codViaje);
+    	Viaje viaje;
+		try {
+			viaje = viajesRepository.findViajeById(codViaje);
+		} catch (ViajeNotFoundException e) {
+			return "redirect:/viajes";
+		}
+		
     	model.addAttribute("reservas", viajesRepository.findReservasByViaje(viaje));
     	return "reserva/listado";
+    }
+    
+    @GetMapping("/viaje/reserva")
+    public String getDetailReservaAction(@RequestParam Map<String, String> params, Model model) {
+    	if (!params.containsKey("codReserva") || params.get("codReserva").isEmpty()) {
+    		return "redirect:/viajes";
+    	}
+    	
+    	Reserva reserva;
+    	Viaje viaje;
+    	try {
+    		reserva = viajesRepository.findReservaById(params.get("codReserva"));
+    		viaje = viajesRepository.findViajeById(reserva.getCodigoViaje());
+		} catch (ReservaNotFoundException | ViajeNotFoundException e) {
+			return "redirect:/viajes";
+		}
+    	
+    	model.addAttribute("reserva", reserva);
+		model.addAttribute("viaje", viaje);
+		model.addAttribute("numReservas", viajesRepository.getNumReservasEnViaje(viaje));
+		model.addAttribute("plazasDisponibles", viajesRepository.getNumPlazasDisponiblesEnViaje(viaje));
+		
+    	return "reserva/reserva_detalle";
     }
 }

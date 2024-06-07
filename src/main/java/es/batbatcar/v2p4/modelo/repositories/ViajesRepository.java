@@ -61,12 +61,12 @@ public class ViajesRepository {
         return viajes;
     }
     
-    public Viaje findViajeById(int codViaje) {
-    	return viajeDAO.findById(codViaje);
+    public Viaje findViajeById(int codViaje) throws ViajeNotFoundException {
+    	return viajeDAO.getById(codViaje);
     }
     
-    public Viaje findViajeSiPermiteReserva(int codViaje, String usuario, int plazasSolicitadas) throws ReservaNoValidaException {
-    	Viaje viaje = viajeDAO.findById(codViaje);
+    public Viaje findViajeSiPermiteReserva(int codViaje, String usuario, int plazasSolicitadas) throws ReservaNoValidaException, ViajeNotFoundException {
+    	Viaje viaje = viajeDAO.getById(codViaje);
     	List<Reserva> reservas = reservaDAO.findAllByTravel(viaje);
     	int plazasReservadas = 0;
     	
@@ -101,6 +101,20 @@ public class ViajesRepository {
         return this.viajeDAO.findAll().size() + 1;
     }
     
+    public int getNumReservasEnViaje(Viaje viaje) {
+    	return reservaDAO.findAllByTravel(viaje).size();
+    }
+    
+    public int getNumPlazasDisponiblesEnViaje(Viaje viaje) {
+    	int plazasReservadas = 0;
+    	
+    	for (Reserva reserva: reservaDAO.findAllByTravel(viaje)) {
+    		plazasReservadas += reserva.getPlazasSolicitadas();
+    	}
+    	
+    	return viaje.getPlazasOfertadas() - plazasReservadas;
+    }
+    
     /**
      * Guarda el viaje (actualiza si ya existe o añade si no existe)
      * @param viaje
@@ -115,6 +129,12 @@ public class ViajesRepository {
     		viajeDAO.update(viaje);
     	}
     }
+    
+
+
+	public Reserva findReservaById(String codReserva) throws ReservaNotFoundException {
+		return reservaDAO.getById(codReserva);
+	}
 	
     /**
      * Encuentra todas las reservas de @viaje

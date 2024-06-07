@@ -1,0 +1,50 @@
+<!-- Vista para el detalle de una reserva -->
+
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Detalle Reserva</title>
+    <link rel="stylesheet" href="/css/main.css">
+</head>
+<body>
+    <div class="header">
+        <img class="icon" src="/images/batbatcar.png">
+        <p class="app-name">Aplicación Bat Bat Car v2</p>
+    </div>
+    <div class="section">
+        <h3><strong th:text="|Detalle Reserva a viaje ${reserva.getCodigoViaje()}|"></strong></h3>
+    </div>
+    <form action="#" method="post">
+		<label for="usuario">Usuario</label>
+        <input type="text" id="usuario" name="usuario" th:value="${reserva.getUsuario()}" readonly>
+
+        <label for="plazasSolicitadas">Plazas solicitadas</label>
+        <input type="number" id="plazasSolicitadas" name="plazasSolicitadas" th:value="${reserva.getPlazasSolicitadas()}" readonly>
+
+        <a th:href="@{/viaje/reservas(codViaje=${reserva.getCodigoViaje()})}"><button type="button">Volver al listado de reservas</button></a>
+		
+		<table class="viajes">
+		    <tr>
+		        <th>Cod. Viaje</th>
+		        <th>Ruta</th>
+		        <th>Propietario</th>
+		        <th>Fecha y hora de salida</th>
+		        <th>Estado</th>
+		        <th>Num. Reservas</th>
+				<th>Plazas Disponibles</th>
+		    </tr>
+		    <tr>
+		        <td th:text="${viaje.getCodViaje()}"></td>
+		        <td th:text="${viaje.getRuta()}"></td>
+		        <td th:text="${viaje.getPropietario()}"></td>
+		        <td th:text="${#temporals.format(viaje.getFechaSalida(), 'dd-MM-yyyy ''a las'' HH:mm')}"></td>
+		        <td th:classappend="${(viaje.estaDisponible()) ? 'abierto':'cerrado'}" th:text="${viaje.getEstado()}"></td>
+		        <td th:text="${numReservas}"></td>
+				<td th:text="${plazasDisponibles}"></td>
+		    </tr>
+		</table>
+    </form>
+</body>
+</html>

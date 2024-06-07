@@ -16,7 +16,7 @@
     <div class="section">
         <h3><strong th:text="|Detalle Viaje con código ${viaje.getCodViaje()}|"></strong></h3>
     </div>
-    <form action="/viaje/add" method="post">
+    <form action="#" method="post">
         <label for="ruta">Ruta</label>
         <input type="text" id="ruta" name="ruta" th:value="${viaje.getRuta()}" readonly>
 
@@ -52,7 +52,7 @@
 		        <td th:text="${reserva.getPlazasSolicitadas()}"></td>
 		        <td th:text="${#temporals.format(reserva.getFechaRealizacion(), 'dd-MM-yyyy ''a las'' HH:mm')}"></td>
 		    	<td>
-					<a href="#">Ver Detalle /</a>
+					<a th:href="@{/viaje/reserva(codReserva=${reserva.getCodigoReserva()})}">Ver Detalle /</a>
 					<a href="#">Cancelar</a>
 				</td>
 			</tr>
