@@ -69,20 +69,33 @@ public class ViajesController {
     	
     	for (Map.Entry<String, String> param: params.entrySet()) {
     		if (param.getValue().isEmpty()) {
-    			errors.put("vacío", "Todos los campos tienen que estar rellenados");
+    			errors.put("error", "Todos los campos tienen que estar rellenados");
     			redirectAttributes.addFlashAttribute("errors", errors);
     			return "redirect:/viaje/add";
     		}
     	}
     	
-    	String ruta = params.get("ruta");
-    	int plazasOfertadas = Integer.parseInt(params.get("plazasOfertadas"));
-    	String propietario = params.get("propietario");
-    	float precio = Float.parseFloat(params.get("precio"));
-    	long duracion = Long.parseLong(params.get("duracion"));
-    	String diaSalida = params.get("diaSalida");
-    	String horaSalida = params.get("horaSalida");
+    	String ruta;
+    	int plazasOfertadas;
+    	String propietario;
+    	float precio;
+    	long duracion;
+    	String diaSalida;
+    	String horaSalida;
     	LocalDateTime fechaSalida;
+    	try {
+	    	ruta = params.get("ruta");
+	    	plazasOfertadas = Integer.parseInt(params.get("plazasOfertadas"));
+	    	propietario = params.get("propietario");
+	    	precio = Float.parseFloat(params.get("precio"));
+	    	duracion = Long.parseLong(params.get("duracion"));
+	    	diaSalida = params.get("diaSalida");
+	    	horaSalida = params.get("horaSalida");
+    	} catch (NumberFormatException e) {
+    		errors.put("error", "Los campos numéricos sólo puede contener números");
+			redirectAttributes.addFlashAttribute("errors", errors);
+			return "redirect:/viaje/add";
+		}
     	
     	
     	if (!Validator.isValidText(ruta, '-')) {
@@ -165,16 +178,25 @@ public class ViajesController {
     	
     	for (Map.Entry<String, String> param: params.entrySet()) {
     		if (param.getValue().isEmpty()) {
-    			errors.put("vacío", "Todos los campos tienen que estar rellenados");
+    			errors.put("error", "Todos los campos tienen que estar rellenados");
     			redirectAttributes.addFlashAttribute("errors", errors);
     			redirectAttributes.addAttribute("codViaje", codViaje);
     			return "redirect:/viaje/reserva/add";
     		}
     	}
     	
-    	String usuario = params.get("usuario");
-    	int plazasSolicitadas = Integer.parseInt(params.get("plazasSolicitadas"));
-    	
+    	String usuario;
+    	int plazasSolicitadas;
+    	try {
+	    	usuario = params.get("usuario");
+	    	plazasSolicitadas = Integer.parseInt(params.get("plazasSolicitadas"));
+		} catch (NumberFormatException e) {
+			errors.put("error", "Los campos numéricos sólo puede contener números");
+			redirectAttributes.addFlashAttribute("errors", errors);
+			redirectAttributes.addAttribute("codViaje", codViaje);
+			return "redirect:/viaje/reserva/add";
+		}
+    
     	if (!Validator.isValidText(usuario, ' ')) {
     		errors.put("usuario", "El propietario debe contener al menos dos cadenas separadas por espacio en blanco y comiencen por mayúsculas");
     	}
@@ -204,11 +226,10 @@ public class ViajesController {
 			viajesRepository.save(nuevaReserva);
 			redirectAttributes.addFlashAttribute("infoMessage", "Reserva insertada con éxito");
 	    	return "redirect:/viajes";
-		} catch (ReservaAlreadyExistsException e) {
-			errors.put("noValid", e.getMessage());
-		} catch (ReservaNotFoundException e) {
-			errors.put("noValid", e.getMessage());
+		} catch (ReservaAlreadyExistsException | ReservaNotFoundException e) {
+			errors.put("error", e.getMessage());
 		}
+    	
     	redirectAttributes.addFlashAttribute("errors", errors);
 		redirectAttributes.addAttribute("codViaje", codViaje);
 		return "redirect:/viaje/reserva/add";
@@ -216,18 +237,13 @@ public class ViajesController {
     
     @GetMapping("/viaje/reservas")
     public String getReservasAction(@RequestParam Map<String, String> params, Model model) {
-    	if (!params.containsKey("codViaje") || params.get("codViaje").isEmpty()) {
-    		return "redirect:/viajes";
-    	}
-    	
-    	int codViaje = Integer.parseInt(params.get("codViaje"));
-    	model.addAttribute("codViaje", codViaje);
-    	
     	Viaje viaje;
-		try {
-			viaje = viajesRepository.findViajeById(codViaje);
-		} catch (ViajeNotFoundException e) {
-			return "redirect:/viajes";
+    	try {
+    		int codViaje = Integer.parseInt(params.get("codViaje"));
+        	model.addAttribute("codViaje", codViaje);
+        	viaje = viajesRepository.findViajeById(codViaje);
+    	} catch (NumberFormatException | ViajeNotFoundException e) {
+    		return "redirect:/viajes";
 		}
 		
     	model.addAttribute("reservas", viajesRepository.findReservasByViaje(viaje));
@@ -236,10 +252,6 @@ public class ViajesController {
     
     @GetMapping("/viaje/reserva")
     public String getDetailReservaAction(@RequestParam Map<String, String> params, Model model) {
-    	if (!params.containsKey("codReserva") || params.get("codReserva").isEmpty()) {
-    		return "redirect:/viajes";
-    	}
-    	
     	Reserva reserva;
     	Viaje viaje;
     	try {

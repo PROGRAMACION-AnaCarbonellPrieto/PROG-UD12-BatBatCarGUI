@@ -11,6 +11,8 @@ import es.batbatcar.v2p4.modelo.dto.Reserva;
 import es.batbatcar.v2p4.modelo.dto.viaje.Viaje;
 import es.batbatcar.v2p4.modelo.dao.interfaces.ReservaDAO;
 import es.batbatcar.v2p4.modelo.dao.interfaces.ViajeDAO;
+import es.batbatcar.v2p4.modelo.dao.sqldao.SQLReservaDAO;
+import es.batbatcar.v2p4.modelo.dao.sqldao.SQLViajeDAO;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
@@ -24,7 +26,7 @@ public class ViajesRepository {
     private final ViajeDAO viajeDAO;
     private final ReservaDAO reservaDAO;
 
-    public ViajesRepository(@Autowired InMemoryViajeDAO viajeDAO, @Autowired InMemoryReservaDAO reservaDAO) {
+    public ViajesRepository(@Autowired SQLViajeDAO viajeDAO, @Autowired SQLReservaDAO reservaDAO) {
         this.viajeDAO = viajeDAO;
         this.reservaDAO = reservaDAO;
     }
