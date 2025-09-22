@@ -9,13 +9,9 @@ import es.batbatcar.v2p4.modelo.dto.viaje.Viaje;
 public class Reserva {
 
     private String codigoReserva;
-
     private String usuario;
-
     private int plazasSolicitadas;
-
     private LocalDateTime fechaRealizacion;
-    
     private Viaje viaje;
 
     public Reserva(String codigoReserva) {

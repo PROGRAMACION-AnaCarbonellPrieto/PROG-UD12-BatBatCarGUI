@@ -1,1 +1,36 @@
 <!-- Vista con el formulario de creación de una reserva -->
+
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Añadir Reserva</title>
+    <link rel="stylesheet" href="/css/main.css">
+</head>
+<body>
+    <div class="header">
+        <img class="icon" src="/images/batbatcar.png">
+        <p class="app-name">Aplicación Bat Bat Car v2</p>
+    </div>
+    <div class="section">
+        <h3><strong th:text="|Añadir Reserva a viaje ${codViaje}|"></strong></h3>
+    </div>
+    <div class="errors" th:if="${errors}">
+        <p th:each="error: ${errors}">
+            <strong th:text="|${error.key} -> |"></strong>
+            <span th:text="${error.value}"></span>
+        </p>
+    </div>
+    <form th:action="@{/viaje/reserva/add(codViaje=${codViaje})}" method="post">
+        <label for="usuario">Usuario</label>
+        <input type="text" id="usuario" name="usuario">
+
+        <label for="plazasSolicitadas">Plazas solicitadas</label>
+        <input type="number" id="plazasSolicitadas" name="plazasSolicitadas">
+
+        <button type="submit">Añadir</button>
+        <a href="/viajes"><button type="button">Volver al listado de viajes</button></a>
+    </form>
+</body>
+</html>

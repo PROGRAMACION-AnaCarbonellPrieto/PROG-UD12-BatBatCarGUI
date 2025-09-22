@@ -1,1 +1,66 @@
 <!-- Vista para el detalle de un viaje -->
+
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Detalle Viaje</title>
+    <link rel="stylesheet" href="/css/main.css">
+</head>
+<body>
+    <div class="header">
+        <img class="icon" src="/images/batbatcar.png">
+        <p class="app-name">Aplicación Bat Bat Car v2</p>
+    </div>
+    <div class="section">
+        <h3><strong th:text="|Detalle Viaje con código ${viaje.getCodViaje()}|"></strong></h3>
+    </div>
+    <form action="#" method="post">
+        <label for="ruta">Ruta</label>
+        <input type="text" id="ruta" name="ruta" th:value="${viaje.getRuta()}" readonly>
+
+        <label for="plazasOfertadas">Plazas ofertadas</label>
+        <input type="number" id="plazasOfertadas" name="plazasOfertadas" th:value="${viaje.getPlazasOfertadas()}" readonly>
+
+        <label for="propietario">Propietario</label>
+        <input type="text" id="propietario" name="propietario" th:value="${viaje.getPropietario()}" readonly>
+
+        <label for="precio">Precio (€)</label>
+        <input type="number" id="precio" name="precio" th:value="${viaje.getPrecio()}" readonly>
+
+        <label for="duracion">Duración aproximada (min)</label>
+        <input type="number" id="duracion" name="duracion" th:value="${viaje.getDuracion()}" readonly>
+
+        <label for="diaSalida">Día de salida</label>
+        <input type="date" id="diaSalida" name="diaSalida" th:value="${#temporals.format(viaje.getFechaSalida(), 'yyyy-MM-dd')}" readonly>
+
+        <label for="horaSalida">Hora de salida</label>
+        <input type="time" id="horaSalida" name="horaSalida" th:value="${#temporals.format(viaje.getFechaSalida(), 'HH:mm')}" readonly>
+		
+		<table class="reservas">
+		    <tr>
+		        <th>Cod. Reserva</th>
+		        <th>Usuario</th>
+		        <th>Plazas Solicitadas</th>
+		        <th>Fecha y Hora de realización</th>
+				<th>Acciones</th>
+		    </tr>
+		    <tr th:each="reserva: ${reservas}">
+		        <td th:text="${reserva.getCodigoReserva()}"></td>
+		        <td th:text="${reserva.getUsuario()}"></td>
+		        <td th:text="${reserva.getPlazasSolicitadas()}"></td>
+		        <td th:text="${#temporals.format(reserva.getFechaRealizacion(), 'dd-MM-yyyy ''a las'' HH:mm')}"></td>
+		    	<td>
+					<a th:href="@{/viaje/reserva(codReserva=${reserva.getCodigoReserva()})}">Ver Detalle /</a>
+					<a th:href="@{/viaje/reserva/cancel(codReserva=${reserva.getCodigoReserva()})}">Cancelar</a>
+				</td>
+			</tr>
+		</table>
+
+		<a th:href="@{/viaje/cancel(codViaje=${viaje.getCodViaje()})}" th:if="${viaje.estaDisponible()}"><button type="button">Cancelar Viaje</button></a>
+		<a th:href="@{/viaje/reserva/add(codViaje=${viaje.getCodViaje()})}" th:if="${viaje.estaDisponible()}"><button type="button">Añadir Reserva</button></a>
+        <a href="/viajes"><button type="button">Volver al listado</button></a>
+    </form>
+</body>
+</html>

@@ -37,6 +37,7 @@ body .row {
     border-top: 1px solid white;
     border-bottom: 1px solid darkgrey;
 }
+
 form {
     border: 1px solid lightgray;
     padding: 20px;
@@ -59,6 +60,7 @@ table {
 table a {
     font-size: 12px;
 }
+
 table tr td {
     padding: 5px;
 }
@@ -68,7 +70,7 @@ table tr th {
     margin-bottom: 2px;
 }
 
-table.viajes tr:nth-child(2n) {
+table.viajes tr:nth-child(2n), table.reservas tr:nth-child(2n) {
     background-color: lightgrey;
 }
 
